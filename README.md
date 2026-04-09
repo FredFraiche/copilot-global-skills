@@ -1,4 +1,4 @@
-# Copilot Global Skills Router
+# Copilot Global Skills
 
 Make VS Code Copilot skills work **across all workspaces** — not just the one they're defined in.
 
@@ -37,7 +37,7 @@ Skill instructions are now in context — agent follows them
 ### 1. Clone this repo (or just download the files)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/copilot-global-skills-router.git
+git clone https://github.com/FredFraiche/copilot-global-skills.git
 ```
 
 ### 2. Copy the skills folder to a permanent location
