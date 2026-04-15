@@ -56,10 +56,11 @@ Options:
   - "honest-evaluation" — Prevents fabricated results, rigged tests, sycophantic framing (recommended)
   - "feasibility-gate" — Pre-checks before significant work to catch doomed approaches (recommended)
   - "plan-execution" — Prevents lazy stub implementations when working from plans (recommended)
+  - "skill-creator" — Guides creation of new skills with proper structure and global registration (recommended)
   - [any additional skills found in skills/ directory]
 ```
 
-Mark the behavioral skills (honest-evaluation, feasibility-gate, plan-execution) as recommended.
+Mark the behavioral skills and skill-creator as recommended.
 
 ## Step 5 — Generate Router
 
@@ -72,9 +73,18 @@ description: "Global skill router — loads skills from a central location when 
 ---
 ```
 
-2. The header pointing to the chosen skills folder path.
+2. The header pointing to the chosen skills folder path. Use a single path line:
+```markdown
+All skill paths follow the pattern `<actual-path>/<skill-name>/SKILL.md`.
+```
 
-3. A trigger table containing **only** the skills the user selected. Pull the trigger keywords from each selected skill's YAML `description` field.
+3. A trigger table containing **only** the skills the user selected. Use a **2-column format** (Skill | Triggers) — no Path column, since paths are derived from the header:
+```markdown
+| Skill | Triggers |
+|-------|----------|
+| **skill-name** | keyword1, keyword2, keyword3 |
+```
+Pull the trigger keywords from each selected skill's YAML `description` field.
 
 4. The standard rules section (multiple skills can fire, always read_file, workspace skills take precedence, etc.).
 

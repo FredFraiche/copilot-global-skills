@@ -6,18 +6,20 @@ description: "Global skill router — loads skills from a central location when 
 
 You have access to centrally-hosted skills. The skills directory is located at:
 
-- **Windows**: `C:\Users\<you>\copilot-skills\`
-- **macOS/Linux**: `~/copilot-skills/`
+`<SKILLS_DIR>`
+
+All skill paths follow the pattern `<SKILLS_DIR>/<skill-name>/SKILL.md`.
 
 When the user's message or task context matches the triggers below, **read the corresponding SKILL.md file using read_file** and follow its instructions. Check triggers at the start of every conversation turn.
 
 ## Skill Registry
 
-| Skill | Triggers | Path |
-|-------|----------|------|
-| **honest-evaluation** | test, result, success, fail, error, bug, fix, simulate, evaluate, benchmark, compare, review, deploy, ship | `<SKILLS_DIR>/honest-evaluation/SKILL.md` |
-| **feasibility-gate** | train, model, dataset, build, surrogate, pipeline, rewrite, deploy, GPU, ensemble, fine-tune, scrape, crawl | `<SKILLS_DIR>/feasibility-gate/SKILL.md` |
-| **plan-execution** | plan.md, complete the plan, implement this, spec, roadmap, task list, follow the plan, execute this | `<SKILLS_DIR>/plan-execution/SKILL.md` |
+| Skill | Triggers |
+|-------|----------|
+| **honest-evaluation** | test, result, success, fail, error, bug, fix, simulate, evaluate, benchmark, compare, review, deploy, ship |
+| **feasibility-gate** | train, model, dataset, build, surrogate, pipeline, rewrite, deploy, GPU, ensemble, fine-tune, scrape, crawl |
+| **plan-execution** | plan.md, complete the plan, implement this, spec, roadmap, task list, follow the plan, execute this |
+| **skill-creator** | create a skill, new skill, skill template, SKILL.md, init skill, package skill |
 
 > **Add your own skills** by dropping a folder with a SKILL.md in your skills directory and adding a row to this table.
 

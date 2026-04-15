@@ -34,15 +34,32 @@ Skill instructions are now in context — agent follows them
 
 ## Installation
 
-### 1. Clone this repo (or just download the files)
+### Recommended: Agent-Driven Setup
+
+Clone the repo, open it in VS Code, and tell Copilot:
+
+```
+Set up global skills
+```
+
+The repo includes a setup skill that handles everything automatically — detects your OS, asks where to put the skills folder, lets you pick which skills to install, generates the router with correct paths, and copies it to your prompts folder.
+
+That's it. One sentence, fully interactive, no manual file editing.
+
+### Manual Setup (Fallback)
+
+If you prefer to do it by hand, or the agent setup doesn't work for you:
+
+<details>
+<summary>Click to expand manual steps</summary>
+
+#### 1. Clone this repo
 
 ```bash
 git clone https://github.com/FredFraiche/copilot-global-skills.git
 ```
 
-### 2. Copy the skills folder to a permanent location
-
-Pick a path you won't accidentally delete. Examples:
+#### 2. Copy the skills folder to a permanent location
 
 | OS | Suggested path |
 |----|----------------|
@@ -51,23 +68,18 @@ Pick a path you won't accidentally delete. Examples:
 | Linux | `~/copilot-skills/` |
 
 ```bash
-# Example (Windows PowerShell)
+# Windows PowerShell
 Copy-Item -Path ".\skills\*" -Destination "$env:USERPROFILE\copilot-skills\" -Recurse
 
-# Example (macOS/Linux)
+# macOS/Linux
 cp -r ./skills/ ~/copilot-skills/
 ```
 
-### 3. Edit the router file — update the paths
+#### 3. Edit the router file — set one path
 
-Open `router/global-skills-router.instructions.md` and replace `<SKILLS_DIR>` with your actual path in every table row.
+Open `router/global-skills-router.instructions.md` and replace the placeholder path in the header with your actual skills folder path. Skill paths in the table are relative to this — no per-row editing needed.
 
-For example, on Windows:
-```
-| **honest-evaluation** | test, result, fail, ... | C:\Users\me\copilot-skills\honest-evaluation\SKILL.md |
-```
-
-### 4. Copy the router to your VS Code prompts folder
+#### 4. Copy the router to your VS Code prompts folder
 
 | OS | Prompts folder |
 |----|----------------|
@@ -85,37 +97,43 @@ cp ./router/global-skills-router.instructions.md ~/Library/Application\ Support/
 cp ./router/global-skills-router.instructions.md ~/.config/Code/User/prompts/
 ```
 
-That's it. Every new Copilot conversation will now have access to the router.
+</details>
 
 ## Adding Your Own Skills
 
-1. Create a folder: `~/copilot-skills/my-skill/SKILL.md`
-2. Write the skill instructions in SKILL.md (follow the examples in `skills/`)
-3. Add a row to the trigger table in your installed `global-skills-router.instructions.md`
+The **skill-creator** skill (included in `skills/`) guides you through creating new skills with proper structure. If it's installed globally, just say:
 
-```markdown
-| **my-skill** | keyword1, keyword2, keyword3 | ~/copilot-skills/my-skill/SKILL.md |
+```
+Create a new skill for [topic]
 ```
 
-## Included Example Skills
+Or do it manually:
 
-Three behavioral skills are included as examples. These are **constraints on model behavior**, not capabilities — they work in any project.
+1. Create `<your-skills-dir>/my-skill/SKILL.md` with YAML frontmatter (`description` field with trigger keywords)
+2. Add a row to the trigger table in your installed `global-skills-router.instructions.md`
 
-| Skill | What it does |
-|-------|-------------|
-| **honest-evaluation** | Prevents the model from fabricating success, rigging tests, softening bad results, or hiding failure. Forces accurate reporting of all outcomes. |
-| **feasibility-gate** | Forces a precondition check before significant work (training models, large datasets, multi-file systems). Catches doomed approaches before hours are wasted. |
-| **plan-execution** | Prevents lazy stub-and-scaffold implementations when working from a plan. Enforces real content over empty structure. |
+```markdown
+| **my-skill** | keyword1, keyword2, keyword3 |
+```
+
+See `skills/skill-creator/SKILL.md` for full guidance on writing effective skills.
+
+## Included Skills
+
+| Skill | Type | What it does |
+|-------|------|-------------|
+| **honest-evaluation** | Behavioral | Prevents fabricated success, rigged tests, sycophantic framing. Forces accurate reporting. |
+| **feasibility-gate** | Behavioral | Pre-checks before significant work. Catches doomed approaches before hours are wasted. |
+| **plan-execution** | Behavioral | Prevents lazy stub implementations when working from plans. Enforces real content over structure. |
+| **skill-creator** | Utility | Guides creation of new skills with proper SKILL.md structure, bundled resources, and global registration. |
 
 ## Known Limitations
 
-Be aware of these before relying on this in production:
-
-- **Trigger matching is probabilistic.** Native `.github/skills/` triggers are deterministic (VS Code matches them internally). This router relies on the LLM reading the table and deciding to fire — which it does reliably but not 100% of the time.
-- **Adds tokens to every conversation.** The router table is ~150-200 tokens. Each loaded skill adds more. This is small but non-zero.
-- **Paths are absolute and OS-specific.** No environment variable expansion inside the table. You hardcode your path once during setup.
-- **No native conflict resolution.** If a workspace has the same skill in `.github/skills/`, the router tells the agent to defer — but this is advisory, not enforced by VS Code.
-- **`read_file` adds latency.** Each skill load is a tool call. Native skills are injected without one.
+- **Trigger matching is probabilistic.** Native skills use deterministic matching. This router relies on the LLM reading the table — reliable (~95%) but not guaranteed.
+- **Adds tokens to every conversation.** The router table is ~150-200 tokens. Each loaded skill adds more. Small but non-zero.
+- **Paths are absolute and OS-specific.** Hardcoded once during setup.
+- **No native conflict resolution.** If the workspace has the same skill in `.github/skills/`, the router tells the agent to defer — advisory, not enforced.
+- **`read_file` adds latency.** Each skill load is a tool call.
 
 ## Why Not Just Use `.instructions.md` Directly?
 
